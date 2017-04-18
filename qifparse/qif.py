@@ -27,6 +27,7 @@ class Qif(object):
         self._accounts = []
         self._categories = []
         self._classes = []
+        self._tags = []
         self._transactions = {}
         self._last_header = None
 
@@ -44,6 +45,11 @@ class Qif(object):
         if not isinstance(item, Class):
             raise RuntimeError(six.u("item not recognized"))
         self._classes.append(item)
+
+    def add_tag(self, item):
+        if not isinstance(item, Tag):
+            raise RuntimeError(six.u("item not recognized"))
+        self._tags.append(item)
 
     def add_transaction(self, item, header=None):
         if not isinstance(item, Transaction)\
@@ -94,6 +100,12 @@ class Qif(object):
         res = [klass for klass in self._classes if klass.name == name]
         return tuple(res)
 
+    def get_tags(self, name=None):
+        if not name:
+            return tuple(self._tags)
+        res = [tag for tag in self._tags if tag.name == name]
+        return tuple(res)
+
     def get_transactions(self, recursive=False):
         if not recursive:
             return tuple(self._transactions.values())
@@ -114,6 +126,10 @@ class Qif(object):
         if self._classes:
             res.append('!Type:Class')
             for cat in self._classes:
+                res.append(str(cat))
+        if self._tags:
+            res.append('!Type:Tag')
+            for cat in self._tags:
                 res.append(str(cat))
         if self._transactions:
             for header in self._transactions.keys():
@@ -339,4 +355,12 @@ class Class(BaseEntry):
     _fields = [
         Field('name', 'string', 'N', required=True),
         Field('description', 'string', 'D'),
+    ]
+
+class Tag(BaseEntry):
+    """
+     Class to handle !Type:Tag entries.
+    """
+    _fields = [
+        Field('name', 'string', 'N', required=True),
     ]
