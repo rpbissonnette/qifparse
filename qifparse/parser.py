@@ -25,7 +25,7 @@ NON_INVST_ACCOUNT_TYPES = [
 OPTIONS = [
     '!Option:AllXfr',
     '!Option:AutoSwitch',
-    '!Clear:AutoSwitch'
+    '!Clear:AutoSwitch',
 ]
 
 class QifParserException(Exception):
