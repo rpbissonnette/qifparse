@@ -11,6 +11,7 @@ from qifparse.qif import (
     Category,
     Class,
     Tag,
+    Security,
     Qif,
 )
 
@@ -55,6 +56,7 @@ class QifParser(object):
             'investment': cls_.parseInvestment,
             'class': cls_.parseClass,
             'tag': cls_.parseTag,
+            'security': cls_.parseSecurity,
             'memorized': cls_.parseMemorizedTransaction
         }
         for chunk in chunks:
@@ -75,6 +77,8 @@ class QifParser(object):
                 last_type = 'class'
             elif first_line == '!Type:Tag':
                 last_type = 'tag'
+            elif first_line == '!Type:Security':
+                last_type = 'security'
             elif first_line == '!Type:Memorized':
                 last_type = 'memorized'
                 transactions_header = first_line
@@ -181,6 +185,22 @@ class QifParser(object):
                 curItem.balance_amount = line[1:]
             else:
                 print('Line not recognized: ' + line)
+        return curItem
+
+    @classmethod
+    def parseSecurity(cls_, chunk):
+        """                                                                                                                                                                                                                                   
+        """
+        curItem = Security()
+        lines = chunk.split('\n')
+        for line in lines:
+            if not len(line) or line[0] == '\n' or \
+                    line.startswith('!Type:Security'):
+                continue
+            elif line[0] == 'N':
+                curItem.name = line[1:]
+            elif line[0] == 'T':
+                curItem.security_type = line[1:]
         return curItem
 
     @classmethod
