@@ -29,6 +29,7 @@ class Qif(object):
         self._classes = []
         self._transactions = {}
         self._last_header = None
+        self._securities = []
 
     def add_account(self, item):
         if not isinstance(item, Account):
@@ -44,6 +45,11 @@ class Qif(object):
         if not isinstance(item, Class):
             raise RuntimeError(six.u("item not recognized"))
         self._classes.append(item)
+
+    def add_security(self, item):
+        if not isinstance(item, Security):
+            raise RuntimeError(six.u("item not recognized"))
+        self._securities.append(item)
 
     def add_transaction(self, item, header=None):
         if not isinstance(item, Transaction)\
@@ -94,6 +100,12 @@ class Qif(object):
         res = [klass for klass in self._classes if klass.name == name]
         return tuple(res)
 
+    def get_securities(self, name=None):
+        if not name:
+            return tuple(self._securities)
+        res = [security for security in self._securities if security.name == name]
+        return tuple(res)
+
     def get_transactions(self, recursive=False):
         if not recursive:
             return tuple(self._transactions.values())
@@ -114,6 +126,10 @@ class Qif(object):
         if self._classes:
             res.append('!Type:Class')
             for cat in self._classes:
+                res.append(str(cat))
+        if self._securities:
+            res.append('!Type:Security')
+            for cat in self._securities:
                 res.append(str(cat))
         if self._transactions:
             for header in self._transactions.keys():
@@ -332,6 +348,13 @@ class Category(BaseEntry):
         Field('income', 'boolean', 'I'),
         Field('budget_amount', 'decimal', 'B'),
         Field('tax_schedule_amount', 'string', 'R'),
+    ]
+
+
+class Security(BaseEntry):
+    _fields = [
+        Field('name', 'string', 'N', required=True),
+        Field('security_type', 'string', 'T', required=True),
     ]
 
 
