@@ -129,8 +129,8 @@ class Qif(object):
                 res.append(str(cat))
         if self._securities:
             res.append('!Type:Security')
-            for cat in self._securities:
-                res.append(str(cat))
+            for security in self._securities:
+                res.append(str(security))
         if self._transactions:
             for header in self._transactions.keys():
                 transactions = self._transactions[header]
