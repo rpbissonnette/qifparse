@@ -17,7 +17,7 @@ from qifparse.qif import (
 NON_INVST_ACCOUNT_TYPES = [
     '!Type:Cash',
     '!Type:Bank',
-    '!Type:Ccard',
+    '!Type:CCard',
     '!Type:Oth A',
     '!Type:Oth L',
     '!Type:Invoice',  # Quicken for business only
