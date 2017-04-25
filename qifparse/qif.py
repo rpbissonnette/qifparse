@@ -129,8 +129,8 @@ class Qif(object):
                 res.append(str(cat))
         if self._tags:
             res.append('!Type:Tag')
-            for cat in self._tags:
-                res.append(str(cat))
+            for tag in self._tags:
+                res.append(str(tag))
         if self._transactions:
             for header in self._transactions.keys():
                 transactions = self._transactions[header]
