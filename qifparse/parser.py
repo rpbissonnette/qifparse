@@ -23,6 +23,11 @@ NON_INVST_ACCOUNT_TYPES = [
     '!Type:Invoice',  # Quicken for business only
 ]
 
+OPTIONS = [
+    '!Option:AllXfr',
+    '!Option:AutoSwitch',
+    '!Clear:AutoSwitch',
+]
 
 class QifParserException(Exception):
     pass
@@ -73,6 +78,8 @@ class QifParser(object):
             elif first_line == '!Type:Memorized':
                 last_type = 'memorized'
                 transactions_header = first_line
+            elif first_line in OPTIONS:
+                continue
             elif chunk.startswith('!'):
                 raise QifParserException('Header not reconized')
             # if no header is recognized then
